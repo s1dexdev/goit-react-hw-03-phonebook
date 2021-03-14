@@ -1,69 +1,141 @@
-import React, { Component } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from './ContactForm.module.css';
 
-class ContactForm extends Component {
-  static propTypes = {
-    name: PropTypes.string,
-    number: PropTypes.string,
-  };
+const ContactForm = function ({ onSubmit }) {
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
 
-  state = {
-    name: '',
-    number: '',
-  };
-
-  handleChange = event => {
+  const handleChange = event => {
     const { name, value } = event.currentTarget;
 
-    this.setState({ [name]: value });
+    switch (name) {
+      case 'name':
+        setName(value);
+        break;
+      case 'number':
+        setNumber(value);
+        break;
+    }
   };
 
-  handleSubmit = event => {
+  const resetState = () => {
+    setName('');
+    setNumber('');
+  };
+
+  const handleSubmit = event => {
     event.preventDefault();
 
-    this.props.onSubmit(this.state);
-    this.resetState();
+    onSubmit(name, number);
+    resetState();
   };
 
-  resetState = () => this.setState({ name: '', number: '' });
+  return (
+    <form className={styles.form} onSubmit={handleSubmit}>
+      <label className={styles.labelName}>
+        Name
+        <input
+          className={styles.input}
+          type="text"
+          name="name"
+          value={name}
+          onChange={handleChange}
+        />
+      </label>
+      <label>
+        Number
+        <input
+          className={styles.input}
+          type="text"
+          name="number"
+          value={number}
+          onChange={handleChange}
+        />
+      </label>
 
-  render() {
-    const { name, number } = this.state;
+      <button
+        className={styles.btn}
+        type="submit"
+        disabled={!(name && number) && true}
+      >
+        Add contact
+      </button>
+    </form>
+  );
+};
 
-    return (
-      <form className={styles.form} onSubmit={this.handleSubmit}>
-        <label className={styles.labelName}>
-          Name
-          <input
-            className={styles.input}
-            type="text"
-            name="name"
-            value={name}
-            onChange={this.handleChange}
-          />
-        </label>
-        <label>
-          Number
-          <input
-            className={styles.input}
-            type="text"
-            name="number"
-            value={number}
-            onChange={this.handleChange}
-          />
-        </label>
-
-        <button
-          className={styles.btn}
-          type="submit"
-          disabled={!(name && number) && true}
-        >
-          Add contact
-        </button>
-      </form>
-    );
-  }
-}
+ContactForm.propTypes = {
+  name: PropTypes.string,
+  number: PropTypes.string,
+};
 
 export default ContactForm;
+
+//  CLASS
+
+// class ContactForm extends Component {
+//   static propTypes = {
+//     name: PropTypes.string,
+//     number: PropTypes.string,
+//   };
+
+//   state = {
+//     name: '',
+//     number: '',
+//   };
+
+//   handleChange = event => {
+//     const { name, value } = event.currentTarget;
+
+//     this.setState({ [name]: value });
+//   };
+
+//   handleSubmit = event => {
+//     event.preventDefault();
+
+//     this.props.onSubmit(this.state);
+//     this.resetState();
+//   };
+
+//   resetState = () => this.setState({ name: '', number: '' });
+
+//   render() {
+//     const { name, number } = this.state;
+
+//     return (
+//       <form className={styles.form} onSubmit={this.handleSubmit}>
+//         <label className={styles.labelName}>
+//           Name
+//           <input
+//             className={styles.input}
+//             type="text"
+//             name="name"
+//             value={name}
+//             onChange={this.handleChange}
+//           />
+//         </label>
+//         <label>
+//           Number
+//           <input
+//             className={styles.input}
+//             type="text"
+//             name="number"
+//             value={number}
+//             onChange={this.handleChange}
+//           />
+//         </label>
+
+//         <button
+//           className={styles.btn}
+//           type="submit"
+//           disabled={!(name && number) && true}
+//         >
+//           Add contact
+//         </button>
+//       </form>
+//     );
+//   }
+// }
+
+// export default ContactForm;
